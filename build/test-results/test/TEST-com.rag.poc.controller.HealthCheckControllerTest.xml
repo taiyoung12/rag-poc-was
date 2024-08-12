@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.rag.poc.controller.HealthCheckControllerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-08-12T13:14:56" hostname="jotaeyeong-ui-MacBookPro.local" time="0.113">
+<testsuite name="com.rag.poc.controller.HealthCheckControllerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-08-12T13:19:46" hostname="jotaeyeong-ui-MacBookPro.local" time="0.492">
   <properties/>
-  <testcase name="ping should return pong()" classname="com.rag.poc.controller.HealthCheckControllerTest" time="0.113"/>
-  <system-out><![CDATA[2024-08-12T22:14:56.223+09:00  INFO 15132 --- [poc] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.rag.poc.controller.HealthCheckControllerTest]: HealthCheckControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-08-12T22:14:56.232+09:00  INFO 15132 --- [poc] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.rag.poc.PocApplication for test class com.rag.poc.controller.HealthCheckControllerTest
+  <testcase name="ping should return pong()" classname="com.rag.poc.controller.HealthCheckControllerTest" time="0.492"/>
+  <system-out><![CDATA[22:19:45.751 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.rag.poc.controller.HealthCheckControllerTest]: HealthCheckControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:19:45.819 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.rag.poc.PocApplication for test class com.rag.poc.controller.HealthCheckControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -14,12 +14,16 @@
 
  :: Spring Boot ::                (v3.3.2)
 
-2024-08-12T22:14:56.246+09:00  INFO 15132 --- [poc] [    Test worker] c.r.p.c.HealthCheckControllerTest        : Starting HealthCheckControllerTest using Java 21.0.2 with PID 15132 (started by jotaeyeong in /Users/jotaeyeong/Desktop/kakao/rag-poc-was)
-2024-08-12T22:14:56.247+09:00  INFO 15132 --- [poc] [    Test worker] c.r.p.c.HealthCheckControllerTest        : No active profile set, falling back to 1 default profile: "default"
-2024-08-12T22:14:56.359+09:00  INFO 15132 --- [poc] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2024-08-12T22:14:56.360+09:00  INFO 15132 --- [poc] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2024-08-12T22:14:56.361+09:00  INFO 15132 --- [poc] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2024-08-12T22:14:56.364+09:00  INFO 15132 --- [poc] [    Test worker] c.r.p.c.HealthCheckControllerTest        : Started HealthCheckControllerTest in 0.13 seconds (process running for 1.758)
+2024-08-12T22:19:45.998+09:00  INFO 17380 --- [poc] [    Test worker] c.r.p.c.HealthCheckControllerTest        : Starting HealthCheckControllerTest using Java 21.0.2 with PID 17380 (started by jotaeyeong in /Users/jotaeyeong/Desktop/kakao/rag-poc-was)
+2024-08-12T22:19:45.999+09:00  INFO 17380 --- [poc] [    Test worker] c.r.p.c.HealthCheckControllerTest        : No active profile set, falling back to 1 default profile: "default"
+2024-08-12T22:19:46.376+09:00  INFO 17380 --- [poc] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2024-08-12T22:19:46.377+09:00  INFO 17380 --- [poc] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2024-08-12T22:19:46.378+09:00  INFO 17380 --- [poc] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2024-08-12T22:19:46.391+09:00  INFO 17380 --- [poc] [    Test worker] c.r.p.c.HealthCheckControllerTest        : Started HealthCheckControllerTest in 0.534 seconds (process running for 1.091)
 ]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/jotaeyeong/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.18/417558ea01fe9f0e8a94af28b9469d281c4e3984/byte-buddy-agent-1.14.18.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
 </testsuite>
