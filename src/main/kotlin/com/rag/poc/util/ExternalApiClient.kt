@@ -6,5 +6,5 @@ import org.springframework.web.bind.annotation.PostMapping
 @FeignClient(value = "llm", url = "localhost:8000")
 interface ExternalApiClient {
     @PostMapping("/api/v1/rag")
-    fun requestRag(): Any
+    fun queryLLM(): Any
 }
