@@ -1,13 +1,19 @@
 package com.rag.poc.service
 
 import com.rag.poc.util.ExternalApiClient
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class RagService(
     private val externalApiClient: ExternalApiClient,
 ) {
-    fun queryLLM(): Any  {
-        return externalApiClient.queryLLM()
+    fun queryLLM(
+        keyword: String,
+        prompt: String,
+    ): Any {
+        return externalApiClient.queryLLM(
+            keyword,
+            prompt,
+        )
     }
 }

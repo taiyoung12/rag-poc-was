@@ -1,10 +1,14 @@
 package com.rag.poc.util
 
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 
-@FeignClient(value = "llm", url = "localhost:8000")
+@FeignClient(name = "externalApiClient", url = "\${external.api.url}")
 interface ExternalApiClient {
-    @PostMapping("/api/v1/rag")
-    fun queryLLM(): Any
+    @GetMapping("/rag")
+    fun queryLLM(
+        @RequestParam("keyword") keyword: String,
+        @RequestParam("prompt") prompt: String,
+    ): Any
 }

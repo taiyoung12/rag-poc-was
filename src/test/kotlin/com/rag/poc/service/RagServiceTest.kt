@@ -25,11 +25,11 @@ class RagServiceTest {
 
     @Test
     fun `llm model 에게 요청 할 수 있다`() {
-        Mockito.`when`(externalApiClient.queryLLM()).thenReturn(anyString)
+        Mockito.`when`(externalApiClient.queryLLM(anyString, anyString)).thenReturn(anyString)
 
-        val response = sut.queryLLM()
+        val response = sut.queryLLM(anyString, anyString)
 
-        Mockito.verify(externalApiClient, Mockito.times(1)).queryLLM()
+        Mockito.verify(externalApiClient, Mockito.times(1)).queryLLM(anyString, anyString)
         Assertions.assertEquals(anyString, response)
     }
 }
