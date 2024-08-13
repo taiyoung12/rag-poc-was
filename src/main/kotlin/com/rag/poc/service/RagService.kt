@@ -1,5 +1,6 @@
 package com.rag.poc.service
 
+import com.rag.poc.controller.response.LLMResponse
 import com.rag.poc.util.ExternalApiClient
 import org.springframework.stereotype.Service
 
@@ -10,10 +11,12 @@ class RagService(
     fun queryLLM(
         keyword: String,
         prompt: String,
-    ): Any {
-        return externalApiClient.queryLLM(
-            keyword,
-            prompt,
-        )
+    ): LLMResponse {
+        val ragResponse =
+            externalApiClient.queryLLM(
+                keyword,
+                prompt,
+            )
+        return ragResponse.data
     }
 }
