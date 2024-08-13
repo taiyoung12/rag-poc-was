@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-@EnableFeignClients(basePackages = ["com.rag.poc.util"])
+@EnableFeignClients
 class PocApplication
 
 fun main(args: Array<String>) {
