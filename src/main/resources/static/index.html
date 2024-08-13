@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Viewer</title>
+</head>
+<body>
+<h1>Latest Response</h1>
+<div id="responseContainer">Waiting for response...</div>
+
+<script>
+    // 함수를 이용해 주기적으로 서버에서 최신 response를 가져옴
+    function fetchLatestResponse() {
+        fetch('/latest-response')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('responseContainer').innerText = data;
+            })
+            .catch(error => console.error('Error fetching latest response:', error));
+    }
+
+    // 5초마다 최신 response를 가져오는 인터벌 설정
+    setInterval(fetchLatestResponse, 5000);
+
+    // 페이지 로드 시 즉시 response 가져오기
+    fetchLatestResponse();
+</script>
+</body>
+</html>
