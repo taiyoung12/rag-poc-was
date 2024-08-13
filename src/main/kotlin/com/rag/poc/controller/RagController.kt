@@ -23,4 +23,16 @@ class RagController(
             response,
         )
     }
+
+    @GetMapping("/rag2")
+    fun queryLLM2(
+        @RequestParam("keyword", required = true) keyword: String,
+        @RequestParam("prompt", required = true) prompt: String,
+    ): Response<String> {
+        ragService.enqueueRagRequest(keyword, prompt)
+        return Response.create(
+            SUCCESS_REQUEST_LLM_MODEL,
+            "Request has been enqueued for processing",
+        )
+    }
 }
