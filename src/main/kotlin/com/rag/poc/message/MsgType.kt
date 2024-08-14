@@ -10,6 +10,7 @@ enum class MsgType(
 
     DOES_NOT_EXIST_QUEUE("DOES_NOT_EXIST_QUEUE", "큐를 찾지 못하였습니다."),
     QUEUE_MANAGEMENT_ERROR("QUEUE_MANAGEMENT_ERROR", "큐 관리 중 오류가 발생하였습니다."),
+    RABBITMQ_SEND_ERROR("RABBITMQ_SEND_ERROR", "RabbitMQ 전송 중 오류가 발생하였습니다."),
     ;
 
     override fun getCode(): String = this.code

@@ -1,5 +1,6 @@
 package com.rag.poc.conifg
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.rag.poc.rabbitmq.queue.QueueName
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
@@ -25,6 +26,8 @@ class RabbitMqConfig() {
     @Value("\${rabbitmq.password}")
     private lateinit var password: String
 
+    private val objectMapper = ObjectMapper()
+
     @Bean
     fun connectionFactory(): ConnectionFactory {
         val factory = CachingConnectionFactory()
@@ -49,11 +52,16 @@ class RabbitMqConfig() {
 
     @Bean
     fun jackson2JsonMessageConverter(): Jackson2JsonMessageConverter {
-        return Jackson2JsonMessageConverter()
+        return Jackson2JsonMessageConverter(objectMapper)
     }
 
     @Bean
     fun ragQueue(): Queue {
         return Queue(QueueName.RAG.toString(), true)
+    }
+
+    @Bean
+    fun testQueue(): Queue {
+        return Queue(QueueName.TEST.toString(), true)
     }
 }

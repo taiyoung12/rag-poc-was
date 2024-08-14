@@ -4,16 +4,16 @@ import com.rag.poc.controller.response.LLMResponse
 import com.rag.poc.controller.response.RagResponse
 import com.rag.poc.rabbitmq.message.RagMessage
 import com.rag.poc.rabbitmq.queue.MessageSender
+import com.rag.poc.rabbitmq.queue.QueueManagement
+import com.rag.poc.rabbitmq.queue.QueueName
 import com.rag.poc.util.ExternalApiClient
-import org.springframework.amqp.core.Queue
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 
 @Service
 class RagService(
     private val externalApiClient: ExternalApiClient,
     private val sender: MessageSender,
-    @Qualifier("ragQueue") private val ragQueue: Queue,
+    private val management: QueueManagement,
 ) {
     fun queryLLM(
         keyword: String,
@@ -32,7 +32,8 @@ class RagService(
         prompt: String,
     ) {
         val message = RagMessage(keyword, prompt)
-        sender.send(ragQueue, message)
+        val queue = management.getQueue(QueueName.RAG)
+        sender.send(queue, message)
     }
 
     fun processRagRequest(message: RagMessage): RagResponse {

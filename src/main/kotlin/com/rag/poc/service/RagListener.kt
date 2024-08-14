@@ -13,7 +13,6 @@ class RagListener(
     @RabbitListener(queues = ["RAG"])
     fun receiveMessage(message: RagMessage) {
         val response = ragService.processRagRequest(message)
-        println(response)
         webController.updateLatestResponse(response.data.answer)
     }
 }
