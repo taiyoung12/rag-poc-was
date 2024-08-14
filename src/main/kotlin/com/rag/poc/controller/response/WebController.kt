@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class WebController {
-    // 임시로 response 값을 저장할 변수
     private var lastResponse: String? = null
 
     @GetMapping("/latest-response")
