@@ -1,6 +1,6 @@
 package com.rag.poc.service
 
-import com.rag.poc.controller.response.WebController
+import com.rag.poc.controller.WebController
 import com.rag.poc.rabbitmq.message.RagMessage
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
