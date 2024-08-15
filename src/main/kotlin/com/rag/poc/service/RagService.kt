@@ -2,16 +2,18 @@ package com.rag.poc.service
 
 import com.rag.poc.controller.response.LLMResponse
 import com.rag.poc.controller.response.RagResponse
+import com.rag.poc.rabbitmq.message.RagMessage
+import com.rag.poc.rabbitmq.queue.MessageSender
+import com.rag.poc.rabbitmq.queue.QueueManagement
+import com.rag.poc.rabbitmq.queue.QueueName
 import com.rag.poc.util.ExternalApiClient
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class RagService(
     private val externalApiClient: ExternalApiClient,
-    private val rabbitTemplate: RabbitTemplate,
-    private val ragQueue: Queue,
+    private val sender: MessageSender,
+    private val management: QueueManagement,
 ) {
     fun queryLLM(
         keyword: String,
@@ -29,13 +31,13 @@ class RagService(
         keyword: String,
         prompt: String,
     ) {
-        val message = "$keyword|$prompt"
-        rabbitTemplate.convertAndSend(ragQueue.name, message)
+        val message = RagMessage(keyword, prompt)
+        val queue = management.getQueue(QueueName.RAG)
+        sender.send(queue, message)
     }
 
-    fun processRagRequest(message: String): RagResponse {
-        val (keyword, prompt) = message.split("|")
-        val response = externalApiClient.queryLLM(keyword, prompt)
+    fun processRagRequest(message: RagMessage): RagResponse {
+        val response = externalApiClient.queryLLM(message.keyword, message.prompt)
         return response
     }
 }
