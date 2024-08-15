@@ -5,7 +5,7 @@ import com.rag.poc.base.exception.BaseMsgType
 
 data class Response<T>(
     @JsonProperty("code") val code: String,
-    @JsonProperty("message") val message: String = "",
+    @JsonProperty("message") val message: String,
     @JsonProperty("data") val data: T?,
     @JsonProperty("key") val key: String,
 ) {

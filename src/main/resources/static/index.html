@@ -9,11 +9,25 @@
 <h1>Latest Response</h1>
 <div id="responseContainer">Waiting for response...</div>
 
+<h2>Send a Message</h2>
+<form id="chatForm">
+    <label for="keyword">Keyword:</label>
+    <input type="text" id="keyword" name="keyword" required><br><br>
+    <label for="prompt">Prompt:</label>
+    <input type="text" id="prompt" name="prompt" required><br><br>
+    <button type="submit">Send</button>
+</form>
+
 <script>
     // 함수를 이용해 주기적으로 서버에서 최신 response를 가져옴
     function fetchLatestResponse() {
         fetch('/latest-response')
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
             .then(data => {
                 document.getElementById('responseContainer').innerText = data;
             })
@@ -25,6 +39,34 @@
 
     // 페이지 로드 시 즉시 response 가져오기
     fetchLatestResponse();
+
+    // 폼 제출 시 API에 데이터 전송
+    document.getElementById('chatForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 폼 제출 방지
+
+        const keyword = document.getElementById('keyword').value;
+        const prompt = document.getElementById('prompt').value;
+
+        const url = `/rag?keyword=${encodeURIComponent(keyword)}&prompt=${encodeURIComponent(prompt)}`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response from API:', data);
+                alert('Your message has been sent!');
+            })
+            .catch(error => console.error('Error sending message:', error));
+    });
 </script>
 </body>
 </html>

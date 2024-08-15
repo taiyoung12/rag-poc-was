@@ -1,6 +1,5 @@
 package com.rag.poc.service
 
-import com.rag.poc.controller.response.LLMResponse
 import com.rag.poc.controller.response.RagResponse
 import com.rag.poc.rabbitmq.message.RagMessage
 import com.rag.poc.rabbitmq.queue.MessageSender
@@ -15,18 +14,6 @@ class RagService(
     private val sender: MessageSender,
     private val management: QueueManagement,
 ) {
-    fun queryLLM(
-        keyword: String,
-        prompt: String,
-    ): LLMResponse {
-        val ragResponse =
-            externalApiClient.queryLLM(
-                keyword,
-                prompt,
-            )
-        return ragResponse.data
-    }
-
     fun enqueueRagRequest(
         keyword: String,
         prompt: String,
@@ -37,7 +24,10 @@ class RagService(
     }
 
     fun processRagRequest(message: RagMessage): RagResponse {
-        val response = externalApiClient.queryLLM(message.keyword, message.prompt)
-        return response
+        return try {
+            externalApiClient.queryLLM(message.keyword, message.prompt)
+        } catch (e: Exception) {
+            RagResponse.handleFailedRequest(message)
+        }
     }
 }
