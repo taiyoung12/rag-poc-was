@@ -1,6 +1,6 @@
 package com.rag.poc.rabbitmq.queue
 
-import com.rag.poc.message.MsgType.*
+import com.rag.poc.message.MsgType
 import com.rag.poc.message.RagException
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -18,7 +18,7 @@ class MessageSender(private val rabbitTemplate: RabbitTemplate) {
                 message as Any,
             )
         } catch (e: Exception) {
-            throw RagException.withType(RABBITMQ_SEND_ERROR)
+            throw RagException.withType(MsgType.RABBITMQ_SEND_ERROR)
         }
     }
 }

@@ -26,7 +26,7 @@ class QueueManagement(
                 throw RagException.withType(MsgType.DOES_NOT_EXIST_QUEUE)
             }
         } catch (e: AmqpConnectException) {
-            throw RagException.withType(MsgType.QUEUE_MANAGEMENT_ERROR)
+            throw e
         }
     }
 
