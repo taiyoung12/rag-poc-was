@@ -6,22 +6,25 @@
     <title>Response Viewer</title>
 </head>
 <body>
-<h1>Latest Response</h1>
-<div id="responseContainer">Waiting for response...</div>
-
 <h2>Send a Message</h2>
 <form id="chatForm">
     <label for="keyword">Keyword:</label>
-    <input type="text" id="keyword" name="keyword" required><br><br>
+    <select id="keyword" name="keyword" required>
+        <option value="마이데이터">마이데이터</option>
+        <option value="마이데이터 API">마이데이터 API</option>
+    </select><br><br>
     <label for="prompt">Prompt:</label>
     <input type="text" id="prompt" name="prompt" required><br><br>
     <button type="submit">Send</button>
 </form>
 
+<h1>LLM 메시지</h1>
+<div id="responseContainer">Waiting for response...</div>
+
 <script>
     // 함수를 이용해 주기적으로 서버에서 최신 response를 가져옴
     function fetchLatestResponse() {
-        fetch('/latest-response')
+        fetch('/llm-response')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

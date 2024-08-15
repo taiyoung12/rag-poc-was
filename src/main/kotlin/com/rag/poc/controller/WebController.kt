@@ -5,14 +5,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class WebController {
-    private var lastResponse: String? = null
+    private var llmResponse: String? = null
 
-    @GetMapping("/latest-response")
-    fun getLatestResponse(): String {
-        return lastResponse ?: "No response received yet"
+    @GetMapping("/llm-response")
+    fun getLLMResponse(): String {
+        return llmResponse ?: "No response received yet"
     }
 
-    fun updateLatestResponse(response: String) {
-        lastResponse = response
+    fun updateLLMResponse(response: String) {
+        llmResponse = response
     }
 }
