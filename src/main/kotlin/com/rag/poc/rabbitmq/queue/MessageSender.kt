@@ -4,9 +4,9 @@ import com.rag.poc.message.MsgType
 import com.rag.poc.message.RagException
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 
-@Service
+@Component
 class MessageSender(private val rabbitTemplate: RabbitTemplate) {
     fun <T> send(
         queue: Queue,
