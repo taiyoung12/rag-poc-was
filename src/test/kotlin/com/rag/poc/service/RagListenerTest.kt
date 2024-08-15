@@ -46,7 +46,7 @@ class RagListenerTest {
         sut.receiveMessage(messageFixture)
 
         Mockito.verify(ragService, Mockito.times(1)).processRagRequest(messageFixture)
-        Mockito.verify(webController, Mockito.times(1)).updateLatestResponse(any())
+        Mockito.verify(webController, Mockito.times(1)).updateLLMResponse(any())
     }
 
     @Test
@@ -57,7 +57,7 @@ class RagListenerTest {
 
         sut.receiveMessage(messageFixture)
 
-        Mockito.verify(webController, Mockito.times(1)).updateLatestResponse(
+        Mockito.verify(webController, Mockito.times(1)).updateLLMResponse(
             failedResponse.data.answer,
         )
     }

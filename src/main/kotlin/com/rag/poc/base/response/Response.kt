@@ -12,7 +12,7 @@ data class Response<T>(
     companion object {
         fun <T> create(
             msgType: BaseMsgType,
-            data: T,
+            data: T? = null,
         ): Response<T> =
             Response(
                 code = msgType.getCode(),

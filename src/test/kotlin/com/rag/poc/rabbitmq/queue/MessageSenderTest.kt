@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
 @SpringRabbitTest
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 class MessageSenderTest {
     @Autowired
     private lateinit var rabbitTemplate: RabbitTemplate
