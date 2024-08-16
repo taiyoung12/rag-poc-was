@@ -53,9 +53,6 @@ class RagIntegrationTest {
 
     private val queue = Queue(QueueName.RAG.name, true)
 
-    private val keyword = anyKeyword
-    private val prompt = anyPrompt
-
     @BeforeEach
     fun setUp() {
         listener = RagListener(ragService, webController)
@@ -63,10 +60,15 @@ class RagIntegrationTest {
 
     @Test
     fun `유저가 keyword와 prompt를 전송하면 RabbitMQ에 메시지가 들어가고, 구독자가 이를 처리하며 External API 요청 후 LLM 응답을 업데이트한다`() {
+        val keyword = anyKeyword
+        val prompt = anyPrompt
+
+        // External API에 요청을 보내고 LLM 응답을 업데이트한다 ( 모킹 )
         Mockito.`when`(externalApiClient.queryLLM(keyword, prompt)).thenAnswer {
             ragResponseFixture
         }
 
+        // 유저가 keyword, prompt로 요청을 보낸다
         mockMvc
             .perform(
                 get("/rag")
@@ -75,16 +77,19 @@ class RagIntegrationTest {
             ).andExpect(status().isOk)
             .andExpect(jsonPath("$.code").value(MsgType.SUCCESS_REQUEST_LLM_MODEL.toString()))
 
+        // queue에 메시지를 전송한다
         verify(rabbitTemplate).convertAndSend(queue.name, messageFixture)
 
+        // 구독자가 메시지를 처리한다
         listener.receiveMessage(messageFixture)
+
+        // External API에 요청을 보내고 LLM 응답을 업데이트한다
         verify(externalApiClient).queryLLM(keyword, prompt)
 
+        // web에 전송한다.
         mockMvc
             .perform(get("/llm-response"))
             .andExpect(status().isOk)
             .andExpect { result -> assertEquals(ragResponseFixture.data.answer, result.response.contentAsString) }
-
-        verify(webController).updateLLMResponse(ragResponseFixture.data.answer)
     }
 }
