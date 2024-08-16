@@ -31,7 +31,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
 

@@ -5,7 +5,6 @@ import com.rag.poc.message.RagException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -13,12 +12,10 @@ import org.springframework.amqp.rabbit.test.context.SpringRabbitTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @SpringBootTest
-@ExtendWith(SpringExtension::class)
 @SpringRabbitTest
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 class MessageSenderTest {
     @Autowired
     private lateinit var rabbitTemplate: RabbitTemplate

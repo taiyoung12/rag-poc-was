@@ -19,7 +19,6 @@ class RagController(
         ragService.enqueueRagRequest(keyword, prompt)
         return Response.create(
             MsgType.SUCCESS_REQUEST_LLM_MODEL,
-            "Request has been enqueued for processing",
         )
     }
 }
