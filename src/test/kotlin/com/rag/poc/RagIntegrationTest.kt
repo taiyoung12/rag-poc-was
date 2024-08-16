@@ -1,33 +1,37 @@
 package com.rag.poc
+
+import com.rag.poc.Fixture.RagFixture.Companion.anyKeyword
+import com.rag.poc.Fixture.RagFixture.Companion.anyPrompt
+import com.rag.poc.Fixture.RagFixture.Companion.messageFixture
 import com.rag.poc.Fixture.RagFixture.Companion.ragResponseFixture
 import com.rag.poc.controller.WebController
 import com.rag.poc.message.MsgType
-import com.rag.poc.rabbitmq.message.RagMessage
+import com.rag.poc.rabbitmq.queue.QueueName
 import com.rag.poc.service.RagListener
 import com.rag.poc.service.RagService
+import com.rag.poc.util.ExternalApiClient
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
 import org.mockito.Mockito
 import org.mockito.kotlin.verify
+import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = ["external.api.url=http://localhost:8001/api/v1"])
+@ActiveProfiles("test")
 class RagIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -36,15 +40,21 @@ class RagIntegrationTest {
     private lateinit var rabbitTemplate: RabbitTemplate
 
     @MockBean
+    private lateinit var externalApiClient: ExternalApiClient
+
+    @Autowired
     private lateinit var ragService: RagService
 
-    @MockBean
+    @Autowired
     private lateinit var webController: WebController
 
-    @Captor
-    private lateinit var messageCaptor: ArgumentCaptor<RagMessage>
-
+    @Autowired
     private lateinit var listener: RagListener
+
+    private val queue = Queue(QueueName.RAG.name, true)
+
+    private val keyword = anyKeyword
+    private val prompt = anyPrompt
 
     @BeforeEach
     fun setUp() {
@@ -52,37 +62,29 @@ class RagIntegrationTest {
     }
 
     @Test
-    fun `유저가 keyword, prompt 를 전송하면 전체 시나리오가 정상적으로 처리된다`() {
-        val keyword = "마이데이터"
-        val prompt = "example prompt"
-
-        mockMvc.perform(
-            get("/rag")
-                .param("keyword", keyword)
-                .param("prompt", prompt),
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.code").value(MsgType.SUCCESS_REQUEST_LLM_MODEL.toString()))
-
-        verify(rabbitTemplate).convertAndSend(Mockito.anyString(), Mockito.anyString(), messageCaptor.capture())
-
-        val sentMessage = messageCaptor.value
-        assertEquals(keyword, sentMessage.keyword)
-        assertEquals(prompt, sentMessage.prompt)
-
-        val responseFuture = CompletableFuture<String>()
-        Mockito.`when`(ragService.processRagRequest(sentMessage)).thenAnswer {
+    fun `유저가 keyword와 prompt를 전송하면 RabbitMQ에 메시지가 들어가고, 구독자가 이를 처리하며 External API 요청 후 LLM 응답을 업데이트한다`() {
+        Mockito.`when`(externalApiClient.queryLLM(keyword, prompt)).thenAnswer {
             ragResponseFixture
         }
 
-        listener.receiveMessage(sentMessage)
+        mockMvc
+            .perform(
+                get("/rag")
+                    .param("keyword", keyword)
+                    .param("prompt", prompt),
+            ).andExpect(status().isOk)
+            .andExpect(jsonPath("$.code").value(MsgType.SUCCESS_REQUEST_LLM_MODEL.toString()))
 
-        verify(webController).updateLLMResponse("모델 응답")
+        verify(rabbitTemplate).convertAndSend(queue.name, messageFixture)
 
-        responseFuture.get(5, TimeUnit.SECONDS)
+        listener.receiveMessage(messageFixture)
+        verify(externalApiClient).queryLLM(keyword, prompt)
 
-        mockMvc.perform(get("/llm-response"))
+        mockMvc
+            .perform(get("/llm-response"))
             .andExpect(status().isOk)
-            .andExpect { result -> assertEquals("모델 응답", result.response.contentAsString) }
+            .andExpect { result -> assertEquals(ragResponseFixture.data.answer, result.response.contentAsString) }
+
+        verify(webController).updateLLMResponse(ragResponseFixture.data.answer)
     }
 }
